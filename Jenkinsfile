@@ -8,7 +8,7 @@ pipeline {
         }
         stage('Stage02 - Move the code ') {
             steps {
-                sh 'rsync -av --exclude=".git" --exclude=".." ./ /home/amit/cicdflaskproject/'       
+                sh 'rsync -av --exclude=".git" --exclude=".." --no-group ./ /home/amit/cicdflaskproject/'       
             }
         }
         stage('Stage03 - Build the Docker image from Dockerfile') {
