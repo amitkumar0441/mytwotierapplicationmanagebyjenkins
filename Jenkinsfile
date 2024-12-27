@@ -6,12 +6,17 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/amitkumar0441/mytwotierapplicationmanagebyjenkins.git'
             }
         }
-        stage('Stage02 - Build the Docker image from Dockerfile') {
+        stage('Stage02 - Move the code ') {
+            steps {
+                sh 'rsync -av --exclude=".git" --exclude=".." ./ /home/amit/cicdflaskproject/'       
+            }
+        }
+        stage('Stage03 - Build the Docker image from Dockerfile') {
             steps {
                 sh 'docker build -t amitkumar0441/myflaskapp:latest .'
             }
         }
-        stage('Stage03 - Push Docker Image to Docker Hub') {
+        stage('Stage04 - Push Docker Image to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub_credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh '''
@@ -22,7 +27,7 @@ pipeline {
                 }
             }
         }
-        stage('Stage04 - Deploy the applications with the use of docker-compose') {
+        stage('Stage05 - Deploy the applications with the use of docker-compose') {
             steps {
                 sh 'docker-compose down && docker-compose up -d '
             }
