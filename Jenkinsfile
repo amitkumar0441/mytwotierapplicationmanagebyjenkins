@@ -6,9 +6,15 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/amitkumar0441/mytwotierapplicationmanagebyjenkins.git'
             }
         }
-        stage('Stage02 - Move the code ') {
+        
+        stage('Stage02-Move Code to Amit Directory Using cp') {
             steps {
-                sh 'rsync -av --exclude=".git" --exclude=".." --no-group ./ /home/amit/cicdflaskproject/'       
+                script {
+                    // Use find and cp to copy files, excluding .git and ..
+                    sh '''
+                    find . -maxdepth 1 -mindepth 1 ! -name .git ! -name .. -exec cp -r {} /home/amit/cicdflaskproject/ \;
+                    '''
+                }
             }
         }
         stage('Stage03 - Build the Docker image from Dockerfile') {
